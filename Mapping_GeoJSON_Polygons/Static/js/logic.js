@@ -27,33 +27,34 @@ let baseMaps = {
 
 // Create the map object with center, zoom level and default layer.
 let map = L.map('mapid', {
-  center: [44.0, -80.0],
-  zoom: 2,
-  layers: [sateliteStreets]
+  center: [43.7, -79.3],
+  zoom: 11,
+  layers: [streets]
 })
 
 // Pass our map layers into our layers control and add the layers control to the map.
 L.control.layers(baseMaps).addTo(map);
 
 // Then we add our 'graymap' tile layer to the map.
-light.addTo(map);
+streets.addTo(map);
 
 // Accessing the Toronto neighborhoods GeoJSON URL.
-let torontoHoods = ""
+let torontoHoods = "https://raw.githubusercontent.com/Saidakramov/Mapping_Earthquakes/Mapping_GeoJSON_Polygons/torontoNeighborhoods.json"
 let myStyle = {
-  color: "#ffffa1",
-  weight: 2
+  fillColor: "#ffffa1",
+  color: "blue",
+  weight: 1
 }
 // Grabbing our GeoJSON data.
-d3.json(torontoData).then(function(data) {
+d3.json(torontoHoods).then(function(data) {
   console.log(data);
 // Creating a GeoJSON layer with the retrieved data.  Skill Drill 13.5.3 add popups to all markers
-L.geoJson(data,{
+L.geoJson(data, {
   style: myStyle,
   onEachFeature: function(feature, layer) {
     console.log(layer);
-    layer.bindPopup("<h3>" + "Airline Code: " + feature.properties.airline +
-    "</h3><hr><h3> Destination:" + feature.properties.dst + "</h3>");
+    layer.bindPopup("<h3>" + "Neighborhood: " + feature.properties.AREA_NAME +
+    "</h3><hr><h3>" + feature.properties.AREA_S_CD + "</h3>");
   }    
 }).addTo(map);
 });
