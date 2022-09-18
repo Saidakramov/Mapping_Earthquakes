@@ -21,7 +21,7 @@ attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap
 
 // Create a base layer that holds both maps.
 let baseMaps = {
-  Street: streets,
+  Light: light,
   Dark: dark
 };
 
@@ -29,28 +29,33 @@ let baseMaps = {
 let map = L.map('mapid', {
   center: [44.0, -80.0],
   zoom: 2,
-  layers: [streets]
+  layers: [light]
 })
 
 // Pass our map layers into our layers control and add the layers control to the map.
 L.control.layers(baseMaps).addTo(map);
 
 // Then we add our 'graymap' tile layer to the map.
-streets.addTo(map);
+light.addTo(map);
 
 // Accessing the airport GeoJSON URL
 // Accessing the Toronto airline routes GeoJSON URL.
-let torontoData = "https://raw.githubusercontent.com/Saidakramov/Mapping_Earthquakes/Mapping_GeoJSON_Points/majorAirports.json"
+let torontoData = "https://raw.githubusercontent.com/Saidakramov/Mapping_Earthquakes/Mapping_GeoJSON_Linestrings/torontoRoutes.json"
 
+let myStyle = {
+  color: "#ffffa1",
+  weight: 2
+}
 // Grabbing our GeoJSON data.
-d3.json(airportData).then(function(data) {
+d3.json(torontoData).then(function(data) {
   console.log(data);
 // Creating a GeoJSON layer with the retrieved data.  Skill Drill 13.5.3 add popups to all markers
 L.geoJson(data,{
+  style: myStyle,
   onEachFeature: function(feature, layer) {
     console.log(layer);
-    layer.bindPopup("<h3>" + "Airport Code: " + feature.properties.faa +
-    "</h3><hr><p>" + feature.properties.name + "</p>");
+    layer.bindPopup("<h3>" + "Airline Code: " + feature.properties.airline +
+    "</h3><hr><h3> Destination:" + feature.properties.dst + "</h3>");
   }    
 }).addTo(map);
 });
